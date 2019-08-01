@@ -1,7 +1,7 @@
 {
-  "name": "styled-react-boilerplate",
+  "name": "react-threejs-viewer",
   "version": "1.0.0",
-  "description": "Minimal & Modern boilerplate for building apps with React & styled-components",
+  "description": "preview and convert 3d object files",
   "scripts": {
     "start": "webpack-dev-server --hot --open --mode development",
     "build": "webpack --mode production",
@@ -9,8 +9,8 @@
     "test": "xo && stylelint './src/**/*.js'"
   },
   "main": "src/index.js",
-  "repository": "https://github.com/xxczaki/styled-react-boilerplate",
-  "author": "Antoni Kepinski",
+  "repository": "https://github.com/qaz74107410/react-threejs-viewer",
+  "author": "Komsan Nipharat",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.5.5",
