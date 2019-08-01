@@ -12,6 +12,8 @@ import Container from './components/container';
 import Header from './components/header';
 import Counter from './components/counter';
 
+import { MDBContainer } from 'mdbreact';
+
 // Global Style
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -50,12 +52,12 @@ const App = () => {
 	}
 
 	return (
-		<Container>
+		<MDBContainer>
+			<GlobalStyle/>
 			<Header>Hello World ⚡</Header>
 			<p>Example site using Styled React Boilerplate!</p>
 			<Counter/>
-			<GlobalStyle/>
-		</Container>
+		</MDBContainer>
 	);
 };
 
