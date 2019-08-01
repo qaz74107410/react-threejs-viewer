@@ -19,6 +19,11 @@ module.exports = (env, argv) => {
 			chunkFilename: '[name].[chunkhash].chunk.js',
 			path: path.resolve(__dirname, 'dist')
 		},
+		resolve: {
+			alias: {
+				'react-dom': '@hot-loader/react-dom'
+			}
+		},
 		optimization: {
 			minimize: mode !== 'development',
 			minimizer: [
@@ -133,7 +138,15 @@ module.exports = (env, argv) => {
 							}
 						}
 					]
-				}
+				},
+				{
+					test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+					loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+				},
+      	{ 
+					test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, 
+					loader: 'file-loader' 
+				},
 			]
 		},
 		plugins: [
