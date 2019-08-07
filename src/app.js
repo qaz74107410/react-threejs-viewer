@@ -4,59 +4,72 @@ import {hot} from 'react-hot-loader/root';
 
 // Import modern-normalize & fonts
 import 'modern-normalize/modern-normalize.css';
-import woff2 from '../public/fonts/open-sans-v16-latin-regular.woff2';
-import woff from '../public/fonts/open-sans-v16-latin-regular.woff';
 
-// Import Components
-import Container from './components/container';
-import Header from './components/header';
-import Counter from './components/counter';
+// MDB base
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
 
 import { MDBContainer } from 'mdbreact';
 
+// Import Components
+import Container from './components/container';
+import Counter from './components/counter';
+
+import Workarea from "./components/workarea";
+import ThreeWrapper from './components/threeWarpper';
+
+// THREE setup
+import { getCamera, getRenderer, getScene, getCanvas, getControl } from './components/threeSetup';
+import Cube from './components/three/cube';
+
 // Global Style
 const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-display: fallback;
-    src: local('Open Sans Regular'), local('OpenSans-Regular'),
-        url('${woff2}') format('woff2'),
-        url('${woff}') format('woff'); 
-  }
-
   body {
-    font-family: Open Sans, Segoe UI, Tahoma, sans-serif !important;
-    background: #212121;
-    color: #fff;
-    padding: 1em;
+    background: #f9f9f9;
     line-height: 1.8em;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeSpeed;
-    word-wrap: break-word
+    word-wrap: break-word;
+    height: 100vh;
+    width: 100%;
+		overflow: hidden;
   }
 `;
 
 // Main page
 const App = () => {
 	// Register service worker
-	if ('serviceWorker' in navigator) {
-		window.addEventListener('load', () => {
-			navigator.serviceWorker.register('/sw.js').then(registration => {
-				console.log('SW registered:', registration);
-			}).catch(error => {
-				console.log('SW registration failed:', error);
-			});
-		});
-	}
+	// if ('serviceWorker' in navigator) {
+	// 	window.addEventListener('load', () => {
+	// 		navigator.serviceWorker.register('/sw.js').then(registration => {
+	// 			console.log('SW registered:', registration);
+	// 		}).catch(error => {
+	// 			console.log('SW registration failed:', error);
+	// 		});
+	// 	});
+	// }
+
+	const headerHeight = 38;
+	const panelWidth = 320;
 
 	return (
-		<MDBContainer>
+		<MDBContainer fluid>
 			<GlobalStyle/>
-			<Header>Hello World ⚡</Header>
+      <ThreeWrapper 
+				getCamera={ getCamera }
+				getRenderer={ getRenderer }
+				getScene={ getScene }
+				getCanvas={ getCanvas }
+				getControl={ getControl }
+				headerHeight= { headerHeight }
+				panelWidth= { panelWidth }
+			>
+				<Cube/>
+			</ThreeWrapper>
+			{/* <Header>Hello World ⚡</Header>
 			<p>Example site using Styled React Boilerplate!</p>
-			<Counter/>
+			<Counter/> */}
 		</MDBContainer>
 	);
 };

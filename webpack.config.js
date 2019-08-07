@@ -91,8 +91,14 @@ module.exports = (env, argv) => {
 				{
 					test: /\.css$/,
 					use: [
-						'cache-loader',
-						ExtractCssChunks.loader,
+						// 'cache-loader',
+						{
+							loader:ExtractCssChunks.loader,
+							options: {
+								hot: true, // if you want HMR
+								reloadAll: true, // when desperation kicks in - this is a brute force HMR flag
+							}
+						},
 						'css-loader',
 						'clean-css-loader'
 					]
