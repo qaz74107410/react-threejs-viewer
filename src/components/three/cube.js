@@ -15,7 +15,9 @@ const Cube = props => {
     const cube = new THREE.Mesh(cubegeometry, cubematerial);
     cube.castShadow = true;
     cube.position.y = 150;
-    scene.add(cube);
+    const group = new THREE.Group();
+    group.add(cube)
+    scene.add(group);
     // console.log(scene);
   }, []);
 

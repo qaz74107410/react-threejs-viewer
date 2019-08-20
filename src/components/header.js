@@ -1,8 +1,13 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useContext } from 'react';
 import styled from 'styled-components';
 import { MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBRow } from 'mdbreact';
 
+import { ThreeJSContext } from './threeWarpper';
+
 const Header = ({ headerStyle }, ref) => {
+
+  const context = useContext(ThreeJSContext)
+  const { sendSignel } = context;
 
   const menus = {
     "File" : [
@@ -29,8 +34,20 @@ const Header = ({ headerStyle }, ref) => {
     ]
   }
 
+  const onClickHandler = menuname => {
+    switch ( menuname ) {
+      case "New":
+        sendSignel("menu_new");
+        break;
+    
+      default:
+        break;
+    }
+  }
+
   const StyledMDBRow = styled(MDBRow)`
     background: #77ecc6;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset;
   `
   
   const dropdowns = [];
@@ -39,7 +56,7 @@ const Header = ({ headerStyle }, ref) => {
       const items = [];
       menus[key].forEach((submenu, index) => {
         if ( submenu !== "-" ) {
-          items.push(<MDBDropdownItem key={index+key} >{submenu}</MDBDropdownItem>)
+      items.push(<MDBDropdownItem key={index+key} onClick={e => onClickHandler( submenu )}>{submenu}</MDBDropdownItem>)
         } else {
           items.push(<MDBDropdownItem key={index+key} divider />)
         }

@@ -1,7 +1,7 @@
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useRef, useContext } from 'react';
 import * as THREE from 'three';
 
-import { MDBRow } from 'mdbreact';
+import { ThreeJSContext } from './threeWarpper';
 
 const Workarea = ({ canvasStyle, containerStyle, setContainerSize }, canvasRef) => {
 
@@ -10,8 +10,6 @@ const Workarea = ({ canvasStyle, containerStyle, setContainerSize }, canvasRef) 
   const onWindowResize = () => {
     setContainerSize();
     fitToContainer(canvasRef.current);
-    // canvasRef.current.style.height = containerRef.current.style.height;
-    // canvasRef.current.style.width = containerRef.current.style.width;
     console.log("resize 🔥")
   };
 
@@ -22,10 +20,6 @@ const Workarea = ({ canvasStyle, containerStyle, setContainerSize }, canvasRef) 
       window.removeEventListener('resize', onWindowResize);
     };
   }, []);
-
-  // useEffect(() => {
-  //   fitToContainer(canvasRef.current);
-  // }, [containerRef.current.offsetHeight, containerRef.current.offsetWidth])
 
   const fitToContainer = (canvas) => {
     // Make it visually fill the positioned parent

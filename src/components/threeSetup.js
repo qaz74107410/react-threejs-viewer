@@ -32,7 +32,7 @@ export const getRenderer = canvas => {
 export const getScene = () => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf9f9f9);
-  scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+  // scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 
   const light = new THREE.SpotLight(0xffffff, 1, 750, 1);
   light.position.set(50, 200, 0);

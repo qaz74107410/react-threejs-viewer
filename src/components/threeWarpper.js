@@ -5,9 +5,7 @@ import Workarea from './workarea';
 import Headers from "./header";
 import Panel from "./panel";
 
-// Reducer
-import { menuState, menuReducer } from "../reducer/menu";
-
+import createSignel from './useSignel';
 
 export const ThreeJSContext = createContext();
 
@@ -21,9 +19,18 @@ const ThreeWrapper = ({
   panelWidth
 }) => {
 
-  // Menu reducer WIP
-  const [stateMenu, dispatchMenu] = useReducer(menuReducer, menuState)
+  // Signel to do something in other component
+  const signelnames = [
+    "menu_new",
+    "menu_import",
+    "three_ready"
+  ];
+  const signel = createSignel( signelnames );
 
+  // Menu function call
+  
+
+  // State
   const [threeIsReady, setThreeIsReady] = useState(false);
   const [timer, updateTimer] = useState(0);
   const [animateFn, setAnimateFn] = useState([]);
@@ -38,7 +45,7 @@ const ThreeWrapper = ({
   const panelRef = useRef();
   
   // Style state
-  const [headerStyle, setHeaderStyle] = useState({ height: headerHeight, boxShadow: 'inset 0px -5px 30px -10px rgba(0,0,0,0.3)' });
+  const [headerStyle, setHeaderStyle] = useState({ height: headerHeight });
   const [panelStyle, setPanelStyle] = useState({ height: document.body.clientHeight - headerStyle.height, width: panelWidth });
   const [containerStyle, setContainerStyle] = useState({ height: document.body.clientHeight - headerStyle.height, width: document.body.clientWidth - panelWidth });
   const [canvasStyle, setCanvasStyle] = useState({ height: window.innerHeight - headerStyle.height, width: window.outerWidth });
@@ -64,6 +71,9 @@ const ThreeWrapper = ({
     control: controlRef.current,
     header: headerRef.current,
     panel: panelRef.current,
+    useSignel: signel.useSignel,
+    sendSignel: signel.sendSignel,
+    signelnames: signel.names,
     setAnimateFn,
     timer,
   };
@@ -77,14 +87,22 @@ const ThreeWrapper = ({
     controlRef.current = getControl(cameraRef.current, canvas);
 
     setThreeIsReady(true);
+    return () => {
+      setThreeIsReady(false)
+    }
   }, []);
 
   // update camera and renderer when dimensions change
-  useEffect(
+  useLayoutEffect(
     () => {
-      cameraRef.current.aspect = offsetWidth / offsetHeight;
-      cameraRef.current.updateProjectionMatrix();
-      rendererRef.current.setSize(offsetWidth, offsetHeight);
+      try {
+        cameraRef.current.aspect = offsetWidth / offsetHeight;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(offsetWidth, offsetHeight);
+        
+      } catch (error) {
+        
+      }
     },
     [offsetWidth, offsetHeight],
   );
@@ -99,21 +117,24 @@ const ThreeWrapper = ({
 
   // three js animate and render
   const animate = () => {
-    animateFn.forEach(fn => {
-      fn();
-    });
-    render();
-    window.requestAnimationFrame(animate);
-    // console.log('animate 😃');
+    if ( threeIsReady ) {
+      animateFn.forEach(fn => {
+        fn();
+      });
+      render();
+      window.requestAnimationFrame(animate);
+      // console.log('animate 😃');
+    }
   }
 
-  const render = () => {
+  const render = () => {  
     rendererRef.current.render(sceneRef.current, cameraRef.current);
   }
 
   useEffect(() => {
-    if ( threeIsReady ) {
+    if ( threeIsReady === true ) {
       animate();
+      signel.sendSignel( signel.names.three_ready );
     }
   }, [threeIsReady])
 
