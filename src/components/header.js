@@ -1,13 +1,18 @@
-import React, { forwardRef, useContext } from 'react';
+import React, { forwardRef, useContext, useRef } from 'react';
 import styled from 'styled-components';
 import { MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBRow } from 'mdbreact';
 
 import { ThreeJSContext } from './threeWarpper';
+import FilePicker from './filepicker';
+import Loader from './three/loader';
 
 const Header = ({ headerStyle }, ref) => {
 
   const context = useContext(ThreeJSContext)
-  const { sendSignel } = context;
+  const { sendSignel, scene } = context;
+
+  // import
+  const filePickerRef = useRef();
 
   const menus = {
     "File" : [
@@ -39,10 +44,18 @@ const Header = ({ headerStyle }, ref) => {
       case "New":
         sendSignel("menu_new");
         break;
+      case "Import":
+        filePickerRef.current.click();  
+        break;
     
       default:
         break;
     }
+  }
+
+  const loader = new Loader( scene );
+  const onImport = files => {
+    loader.loadFiles( files );
   }
 
   const StyledMDBRow = styled(MDBRow)`
@@ -76,6 +89,7 @@ const Header = ({ headerStyle }, ref) => {
     
   return (
     <StyledMDBRow ref={ref} style={ headerStyle }>
+      <FilePicker ref={filePickerRef} onChange={onImport}/>
       {dropdowns}
       ⚡⚡⚡
     </StyledMDBRow>

@@ -7,6 +7,9 @@ import Panel from "./panel";
 
 import createSignel from './useSignel';
 
+import Loader from './three/loader';
+import { getTransformControls } from './threeSetup';
+
 export const ThreeJSContext = createContext();
 
 const ThreeWrapper = ({
@@ -34,15 +37,17 @@ const ThreeWrapper = ({
   const [threeIsReady, setThreeIsReady] = useState(false);
   const [timer, updateTimer] = useState(0);
   const [animateFn, setAnimateFn] = useState([]);
+  const [selectedObj, setSelectedObj] = useState();
   
   // Reference 
   const canvasRef = useRef({});
   const sceneRef = useRef();
   const cameraRef = useRef();
-  const controlRef = useRef();
+  const orbitRef = useRef();
   const rendererRef = useRef();
   const headerRef = useRef();
   const panelRef = useRef();
+  const controlRef = useRef();
   
   // Style state
   const [headerStyle, setHeaderStyle] = useState({ height: headerHeight });
@@ -65,15 +70,23 @@ const ThreeWrapper = ({
   // Context
   const { offsetWidth, offsetHeight } = canvasRef.current;
   const threeContext = {
+
     scene: sceneRef.current,
     camera: cameraRef.current,
     canvas: canvasRef.current,
-    control: controlRef.current,
+
+    orbit: orbitRef.current,
     header: headerRef.current,
     panel: panelRef.current,
+    control: controlRef.current,
+
+    selectedObj : selectedObj,
+    setSelectedObj : setSelectedObj,
+
     useSignel: signel.useSignel,
     sendSignel: signel.sendSignel,
     signelnames: signel.names,
+    
     setAnimateFn,
     timer,
   };
@@ -84,7 +97,15 @@ const ThreeWrapper = ({
     sceneRef.current = getScene();
     rendererRef.current = getRenderer(canvas);
     cameraRef.current = getCamera(canvas);
-    controlRef.current = getControl(cameraRef.current, canvas);
+    orbitRef.current = getControl(cameraRef.current, canvas);
+    controlRef.current = getTransformControls(cameraRef.current, canvas);
+
+    sceneRef.current.add( controlRef.current );
+    controlRef.current.attach( sceneRef.current.children[0] );
+    // controlRef.current.attach( sceneRef.current.children[0] );
+    console.log( sceneRef.current.children[0] );
+
+    console.log( sceneRef.current );
 
     setThreeIsReady(true);
     return () => {
@@ -126,17 +147,20 @@ const ThreeWrapper = ({
       // console.log('animate 😃');
     }
   }
-
   const render = () => {  
     rendererRef.current.render(sceneRef.current, cameraRef.current);
   }
 
+  // signel ready
   useEffect(() => {
     if ( threeIsReady === true ) {
       animate();
       signel.sendSignel( signel.names.three_ready );
     }
   }, [threeIsReady])
+
+  // raycaster
+
 
   return (
     <>
@@ -152,12 +176,12 @@ const ThreeWrapper = ({
             containerStyle={ containerStyle }
             setContainerSize={ setContainerSize }
             />
+          { threeIsReady ? children : undefined }
           <Panel
             ref={ panelRef }
             panelStyle={ panelStyle }
-          />
+            />
         </MDBRow>
-        { threeIsReady ? children : undefined }
       </ThreeJSContext.Provider>
     </>
   );

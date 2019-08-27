@@ -1,12 +1,22 @@
-import * as THREE from 'three';
+import * as THREEjs from 'three';
 import OrbitControls from 'three-orbitcontrols';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+
+const THREE = (function(THREEjs) {
+
+  THREEjs.TransformControls = TransformControls;
+
+  return THREEjs;
+
+})(THREEjs || {});
 
 export const getCamera = ({ offsetWidth, offsetHeight }) => {
   const camera = new THREE.PerspectiveCamera(
     45,
     offsetWidth / offsetHeight,
     1,
-    1000,
+    // 1000,
+    100000,
   );
   camera.position.set(50, 150, 0);
 
@@ -40,7 +50,7 @@ export const getScene = () => {
   scene.add(light);
 
   const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 32, 32);
-  const planeMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc });
+  const planeMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
   plane.rotation.x = (-90 * Math.PI) / 180;
@@ -51,13 +61,13 @@ export const getScene = () => {
 };
 
 export const getControl = (camera, canvas) => {
-  const controls = new OrbitControls( camera, canvas );
-  controls.update();
-  return controls;
+  const orbit = new OrbitControls( camera, canvas );
+  orbit.update();
+  return orbit;
 }
 
 // export const getCanvas = container => {
-//   const canvas = document.createElement("CANVAS");
+//   const canvas = document. createElement("CANVAS");
 //   document.container.appendChild(canvas);
 
 //   return canvas;
@@ -65,4 +75,9 @@ export const getControl = (camera, canvas) => {
 
 export const getCanvas = canvasRef => {
   return canvasRef.current;
+}
+
+export const getTransformControls = (camera, canvas) => {
+  const control = new THREE.TransformControls( camera, canvas );
+  return control;
 }
