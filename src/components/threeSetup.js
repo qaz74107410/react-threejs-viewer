@@ -41,7 +41,7 @@ export const getRenderer = canvas => {
 
 export const getScene = () => {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf9f9f9);
+  scene.background = new THREE.Color(0xc0c0c0);
   // scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 
   const light = new THREE.SpotLight(0xffffff, 1, 750, 1);
@@ -49,13 +49,17 @@ export const getScene = () => {
   light.rotation.z = (90 * Math.PI) / 180;
   scene.add(light);
 
-  const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 32, 32);
-  const planeMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  // const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000, 32, 32);
+  // const planeMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
+  // const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-  plane.rotation.x = (-90 * Math.PI) / 180;
-  plane.receiveShadow = true;
-  scene.add(plane);
+  // plane.rotation.x = (-90 * Math.PI) / 180;
+  // plane.receiveShadow = true;
+  // scene.add(plane);
+
+  const group = new THREE.Group();
+  group.name = 'invisible';
+  scene.add( group );
 
   return scene;
 };
@@ -79,5 +83,16 @@ export const getCanvas = canvasRef => {
 
 export const getTransformControls = (camera, canvas) => {
   const control = new THREE.TransformControls( camera, canvas );
+  control.name = "TransformControls"
   return control;
+}
+
+export const getGridHelper = ( size = 1000, divisions = 50 ) => {
+  const gridHelper = new THREE.GridHelper( size, divisions );
+  return gridHelper
+}
+
+export const getRaycaster = () => {
+  const raycaster = new THREE.Raycaster();
+  return raycaster;
 }

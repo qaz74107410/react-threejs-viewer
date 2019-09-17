@@ -64,9 +64,13 @@
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.12.10",
     "react-router-dom": "^5.0.1",
+    "react-sortable-tree": "^2.6.2",
+    "react-sortable-tree-theme-file-explorer": "^2.0.0",
+    "react-treebeard": "^3.2.4",
     "styled-components": "^4.3.2",
     "three": "^0.107.0",
     "three-orbitcontrols": "^2.102.2",
+    "use-deep-compare-effect": "^1.2.0",
     "use-persisted-state": "^0.3.0"
   },
   "xo": {

@@ -55,7 +55,9 @@ const Header = ({ headerStyle }, ref) => {
 
   const loader = new Loader( scene );
   const onImport = files => {
-    loader.loadFiles( files );
+    loader.loadFiles( files, () => {
+      sendSignel("menu_import")
+    })
   }
 
   const StyledMDBRow = styled(MDBRow)`

@@ -45,7 +45,7 @@ const THREE = (function (THREEjs) {
 
 function Loader( scene ) {
 
-  const loadFiles = ( files ) => {
+  const loadFiles = ( files, callback ) => {
 
     if ( files.length > 0 ) {
 
@@ -73,7 +73,7 @@ function Loader( scene ) {
 
 			for ( var i = 0; i < files.length; i ++ ) {
 
-				loadFile( files[ i ], manager );
+				loadFile( files[ i ], manager, callback );
 
 			}
 
@@ -83,7 +83,7 @@ function Loader( scene ) {
 
   } 
 
-  const loadFile = ( file, manager ) => {
+  const loadFile = ( file, manager, callback ) => {
     
     const filename = file.name;
 		const extension = filename.split( '.' ).pop().toLowerCase();
@@ -111,6 +111,7 @@ function Loader( scene ) {
 
 					scene.add( object );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -125,6 +126,7 @@ function Loader( scene ) {
 
 					scene.add( amfobject );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -142,6 +144,7 @@ function Loader( scene ) {
 						scene.add(obj);
 					});
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -162,6 +165,7 @@ function Loader( scene ) {
 						scene.add(obj);
 					});
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -185,6 +189,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( mesh ) );
 					scene.add( mesh );
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -205,6 +210,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( collada.scene ) );
 					scene.add( collada.scene )
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -223,6 +229,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( object ) );
 					scene.add( object );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -249,6 +256,7 @@ function Loader( scene ) {
 
 					} );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -283,6 +291,7 @@ function Loader( scene ) {
 
 					} );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -339,6 +348,7 @@ function Loader( scene ) {
 
 					handleJSON( data, file, filename );
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -357,6 +367,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( collada.scene ) );
 					scene.add( collada.scene )
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -382,6 +393,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( mesh ) );
 					scene.add( mesh );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -399,6 +411,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( object ) );
 					scene.add( object );
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -417,6 +430,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( object ) );
 					scene.add( object );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 				// reader.readAsBinaryString( file );
@@ -437,6 +451,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( object ) );
 					scene.add( object );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 				// reader.readAsBinaryString( file );
@@ -456,6 +471,7 @@ function Loader( scene ) {
 
 			// 		editor.execute( new AddObjectCommand( object ) );
 
+			callback && callback();
 			// 	}, false );
 			// 	reader.readAsText( file );
 
@@ -479,6 +495,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( mesh ) );
 					scene.add( mesh );
 
+					callback && callback();
 				}, false );
 				reader.readAsArrayBuffer( file );
 
@@ -502,6 +519,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( mesh ) );
 					scene.add( mesh );
 
+					callback && callback();
 				}, false );
 
 				if ( reader.readAsBinaryString !== undefined ) {
@@ -558,6 +576,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( group ) );
 					scene.add( group );
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -581,6 +600,7 @@ function Loader( scene ) {
 					// editor.execute( new AddObjectCommand( mesh ) );
 					scene.add( mesh );
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -599,6 +619,7 @@ function Loader( scene ) {
 						scene.add(obj);
 					});
 
+					callback && callback();
 				}, false );
 				reader.readAsText( file );
 
@@ -610,6 +631,7 @@ function Loader( scene ) {
 
 				// 	handleZIP( event.target.result );
 
+				callback && callback();
 				// }, false );
 				// reader.readAsBinaryString( file );
 

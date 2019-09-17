@@ -12,10 +12,6 @@ import "mdbreact/dist/css/mdb.css";
 
 import { MDBContainer } from 'mdbreact';
 
-// Import Components
-import Container from './components/container';
-import Counter from './components/counter';
-
 import Workarea from "./components/workarea";
 import ThreeWrapper from './components/threeWarpper';
 
