@@ -9,6 +9,7 @@ import createSignel from './use/useSignel';
 
 import * as THREE from 'three';
 import { getTransformControls, getGridHelper, getRaycaster, getSpotLightHelper } from './threeSetup';
+import { useSetting } from './use/useSetting';
 
 export const ThreeJSContext = createContext();
 
@@ -21,6 +22,9 @@ const ThreeWrapper = ({
   headerHeight,
   panelWidth
 }) => {
+
+  // Setting
+  const [ settings, setSetting ] = useSetting( {} );
 
   // Signel to do something in other component
   const signelnames = [
@@ -130,6 +134,9 @@ const ThreeWrapper = ({
     useSignel: signel.useSignel,
     sendSignel: signel.sendSignel,
     signelnames: signel.names,
+
+    settings,
+    setSetting,
     
     setAnimateFn,
     timer,
