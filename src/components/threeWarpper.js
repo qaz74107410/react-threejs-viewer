@@ -103,9 +103,12 @@ const ThreeWrapper = ({
       if ( spotlightHelperRef.current && spotlightHelperRef.current.light.uuid !== obj.uuid ) {
         spotlightHelperRef.current.parent.remove( spotlightHelperRef.current );
         spotlightHelperRef.current.dispose();
+        spotlightHelperRef.current = undefined
       } 
-      spotlightHelperRef.current = getSpotLightHelper( obj );
-      invisgroup.add( spotlightHelperRef.current ); 
+      if ( !spotlightHelperRef.current ) {
+        spotlightHelperRef.current = getSpotLightHelper( obj );
+        invisgroup.add( spotlightHelperRef.current ); 
+      }
     } else if ( spotlightHelperRef.current ) {
       spotlightHelperRef.current.parent.remove( spotlightHelperRef.current );
       spotlightHelperRef.current.dispose();
