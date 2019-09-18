@@ -92,6 +92,11 @@ export const getGridHelper = ( size = 1000, divisions = 50 ) => {
   return gridHelper
 }
 
+export const getSpotLightHelper = ( spotLight ) => {
+  const lightHelper = new THREE.SpotLightHelper( spotLight );
+  return lightHelper
+}
+
 export const getRaycaster = () => {
   const raycaster = new THREE.Raycaster();
   return raycaster;

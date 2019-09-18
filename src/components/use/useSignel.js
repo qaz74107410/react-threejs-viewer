@@ -1,24 +1,7 @@
+
 import { useState, useEffect } from "react";
 
-// import createPersistedState from 'use-persisted-state';
-// const useSignelState = createPersistedState('signel');
-
-// const useSignel = initSignel => {
-//   const [signel, setSignel] = useSignelState(initSignel);
-
-//   return {
-//     ...signel,
-//     send: ( targetSignel ) => {
-//       let currentSignel = { ...signel };
-//       currentSignel[targetSignel] = true;
-//       setSignel( currentSignel );
-//       currentSignel[targetSignel] = false;
-//       setSignel( currentSignel );      
-//     }
-//   };
-// };
-
-// export default useSignel;
+const DEBUG = true;
 
 function Signel( names ) {
 
@@ -28,16 +11,16 @@ function Signel( names ) {
     return (
       useEffect(() => {
         if ( signelsname.indexOf(signel) !== -1 ) {
-          console.log("[📶 signel recived] : ", signelsname);
+        console.log("[📶 signel recived] : ", signel);
           handler();
         }
-      }, signelsname)
+      }, [signel])
     )
 
   }
   
   const sendSignel = ( signelname ) => {
-    console.log("[📶 signel sended] : ", signelname);
+    DEBUG && console.log("[📶 signel sended] : ", signelname);
     setSignel(signelname);
     setTimeout(() => { setSignel("") }, 100);
   }

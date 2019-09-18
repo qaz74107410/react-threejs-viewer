@@ -8,7 +8,7 @@ import Panel from "./panel";
 import createSignel from './use/useSignel';
 
 import * as THREE from 'three';
-import { getTransformControls, getGridHelper, getRaycaster } from './threeSetup';
+import { getTransformControls, getGridHelper, getRaycaster, getSpotLightHelper } from './threeSetup';
 
 export const ThreeJSContext = createContext();
 
@@ -26,7 +26,8 @@ const ThreeWrapper = ({
   const signelnames = [
     "menu_new",
     "menu_import",
-    "three_ready"
+    "three_ready",
+    "three_forceupdate"
   ];
   const signel = createSignel( signelnames );  
 
@@ -47,6 +48,7 @@ const ThreeWrapper = ({
   const controlRef = useRef();
   const gridHelperRef = useRef();
   const raycasterRef = useRef();
+  const spotlightHelperRef = useRef();
   const mouseRef = useRef(new THREE.Vector2());
   
   // Style state
@@ -74,6 +76,10 @@ const ThreeWrapper = ({
 	  mouseRef.current.y = - ( event.clientY / canvasStyle.height ) * 2 + 1;
   }
 
+  const onMouseUp = e => {
+    signel.sendSignel( signel.names.three_forceupdate );
+  }
+
   const setContainerSize = () => {
     setContainerStyle({ height: window.innerHeight - headerStyle.height, width: window.innerWidth - panelWidth });
   }
@@ -81,10 +87,25 @@ const ThreeWrapper = ({
   // command functions  
   const selectObj = obj => {
     setSelectedObj( obj );
+    let invisgroup
     // attach controller to object
     const transControls = obj.children.filter( child => child.name === 'TransformControls' )
     if ( controlRef.current !== obj && !obj.isScene && transControls.length <= 0 ) {
       controlRef.current.attach( obj );
+    }
+    // create attach spotlighthelper
+    if ( obj.isSpotLight ) {
+      invisgroup = sceneRef.current.getObjectByName('invisible')
+      if ( spotlightHelperRef.current && spotlightHelperRef.current.light.uuid !== obj.uuid ) {
+        spotlightHelperRef.current.parent.remove( spotlightHelperRef.current );
+        spotlightHelperRef.current.dispose();
+      } 
+      spotlightHelperRef.current = getSpotLightHelper( obj );
+      invisgroup.add( spotlightHelperRef.current ); 
+    } else if ( spotlightHelperRef.current ) {
+      spotlightHelperRef.current.parent.remove( spotlightHelperRef.current );
+      spotlightHelperRef.current.dispose();
+      spotlightHelperRef.current = undefined
     }
     console.log("select : ", obj);
   }
@@ -158,14 +179,6 @@ const ThreeWrapper = ({
     [offsetWidth, offsetHeight],
   );
 
-  // resize event
-  // useEffect(() => {
-  //   window.addEventListener('resize', onWindowResize);
-  //   return () => {
-  //     window.removeEventListener('resize', onWindowResize);
-  //   };
-  // }, []);
-
   // three js animate and render
   const animate = () => {
     if ( threeIsReady ) {
@@ -180,6 +193,11 @@ const ThreeWrapper = ({
   const render = () => {  
     rendererRef.current.render(sceneRef.current, cameraRef.current);
 
+    // update helper
+    if ( spotlightHelperRef.current !== undefined ) {
+      spotlightHelperRef.current.update();
+    }
+
     // findIntersects(mouseRef.current, cameraRef.current);
   }
 
@@ -191,11 +209,17 @@ const ThreeWrapper = ({
 
       // resize event
       window.addEventListener( 'resize', onWindowResize );
-      window.addEventListener( 'mousemove', onMouseMove, false );
+      canvasRef.current.addEventListener( 'mousemove', onMouseMove, false );
+      canvasRef.current.addEventListener( 'mouseup', onMouseUp, false );
+      canvasRef.current.addEventListener( 'touchend', onMouseUp, false );
+      
       controlRef.current.addEventListener( 'dragging-changed', onDraggingChanged );
       return () => {
         window.removeEventListener( 'resize', onWindowResize );
-        window.removeEventListener( 'mousemove', onMouseMove );
+        canvasRef.current.removeEventListener( 'mousemove', onMouseMove );
+        canvasRef.current.addEventListener( 'mouseup', onMouseUp );
+        canvasRef.current.addEventListener( 'touchend', onMouseUp );
+
         controlRef.current.removeEventListener( 'dragging-changed', onDraggingChanged );
       };
       

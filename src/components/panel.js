@@ -30,6 +30,7 @@ const SceneSection = styled(PanelSection)`
 
 const ObjDetailSection = styled(PanelSection)`
   overflow-x: none;
+  padding: 0;
 `
 
 const Panel = ({ panelStyle }, panelRef) => {
