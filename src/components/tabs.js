@@ -9,6 +9,7 @@ const StyledMDBNavLink = styled(MDBNavLink)`
   color: black;
   box-shadow: rgba(0,0,0,0.2) 0px -5px 30px -10px inset;
   border: none; 
+  padding : 0.3rem 0.6rem;
 `
 
 const StyledMDBNavItem = styled(MDBNavItem)`

@@ -63,6 +63,7 @@ const Header = ({ headerStyle }, ref) => {
   const StyledMDBRow = styled(MDBRow)`
     background: #77ecc6;
     box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset;
+    font-size : 0.9rem;
   `
   
   const dropdowns = [];

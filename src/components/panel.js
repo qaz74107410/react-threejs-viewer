@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { MDBRow, MDBTabPane, MDBContainer } from 'mdbreact';
 
-// import RSC from "react-scrollbars-custom";
+import Scrollbar from 'react-scrollbars-custom';
 
 import styled from 'styled-components';
 
@@ -10,11 +10,12 @@ import Tabs from './tabs';
 import SceneTree from './three/controller/scenetree';
 import ObjectInfo from './three/controller/objectinfo';
 
-const StyledPanel = styled.div`
+const StyledPanel = styled(Scrollbar)`
   background: #a0f1d7;
   box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset; 
     box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset; 
   box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset; 
+  font-size : 0.9rem;
 `
 
 const PanelSection = styled.div`
@@ -40,10 +41,12 @@ const Panel = ({ panelStyle }, panelRef) => {
       <Tabs defalutname="scene" namearray={["scene","detail","setting"]}>
         <MDBTabPane tabId="scene" role="tabpanel">
           <SceneSection>
-            <SceneTree/>
+            <Scrollbar>
+              <SceneTree/>
+            </Scrollbar>
           </SceneSection>
-          <Tabs defalutname="geo" namearray={["geo","material","info"]}>
-            <MDBTabPane tabId="geo" role="tabpanel">
+          <Tabs defalutname="object" namearray={["object","material","info"]}>
+            <MDBTabPane tabId="object" role="tabpanel">
               <ObjDetailSection>
                 <ObjectInfo/>
               </ObjDetailSection>

@@ -57,7 +57,7 @@ const ThreeWrapper = ({
   
   // Style state
   const [headerStyle, setHeaderStyle] = useState({ height: headerHeight });
-  const [panelStyle, setPanelStyle] = useState({ height: document.body.clientHeight - headerStyle.height, width: panelWidth });
+  const [panelStyle, setPanelStyle] = useState({ height: document.body.clientHeight - headerStyle.height, width: panelWidth, maxHeight: document.body.clientHeight - headerStyle.height });
   const [containerStyle, setContainerStyle] = useState({ height: document.body.clientHeight - headerStyle.height, width: document.body.clientWidth - panelWidth });
   const [canvasStyle, setCanvasStyle] = useState({ height: window.innerHeight - headerStyle.height, width: window.outerWidth });
   
