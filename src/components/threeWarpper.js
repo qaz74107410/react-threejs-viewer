@@ -24,7 +24,7 @@ const ThreeWrapper = ({
 }) => {
 
   // Setting
-  const [ settings, setSetting ] = useSetting( {} );
+  const [ settings, setSettings ] = useSetting();
 
   // Signel to do something in other component
   const signelnames = [
@@ -82,6 +82,31 @@ const ThreeWrapper = ({
 
   const onMouseUp = e => {
     signel.sendSignel( signel.names.three_forceupdate );
+    // findIntersects(mouseRef.current, cameraRef.current)
+  }
+
+  const onKeyPress = e => {
+    const key = e.key
+    
+    switch (key) {
+      case settings.key_translate :
+        controlRef.current.setMode("translate")
+        break;
+      case settings.key_rotate :
+        controlRef.current.setMode("rotate")
+        break;
+      case settings.key_scale :
+        controlRef.current.setMode("scale")
+        break;
+      // case settings.key_deselect :
+      //   selectObj( undefined )
+      //   useSignel(signelnames.three_forceupdate)
+      //   break;
+      default:
+        console.log('nokey')
+        break;
+      }
+    console.log(key)
   }
 
   const setContainerSize = () => {
@@ -92,9 +117,14 @@ const ThreeWrapper = ({
   const selectObj = obj => {
     setSelectedObj( obj );
     let invisgroup
+    if ( !obj || !obj.isObject3D ) {
+      // deselect
+      controlRef.current.visible = false;
+      return;
+    }
     // attach controller to object
-    const transControls = obj.children.filter( child => child.name === 'TransformControls' )
-    if ( controlRef.current !== obj && !obj.isScene && transControls.length <= 0 ) {
+    controlRef.current.visible = true;
+    if ( controlRef.current !== obj && !obj.isScene ) {
       controlRef.current.attach( obj );
     }
     // create attach spotlighthelper
@@ -139,7 +169,7 @@ const ThreeWrapper = ({
     signelnames: signel.names,
 
     settings,
-    setSetting,
+    setSettings,
     
     setAnimateFn,
     timer,
@@ -238,33 +268,38 @@ const ThreeWrapper = ({
 
   // raycaster
   // disable due no idea which nested object user want to select ?
-  // const findIntersects = (mouse, camera) => {
-  //   const raycaster = raycasterRef.current;
-  //   raycaster.setFromCamera( mouse, camera );
+  const findIntersects = (mouse, camera) => {
+    const raycaster = raycasterRef.current;
+    raycaster.setFromCamera( mouse, camera );
 
     
-  //   // calculate objects intersecting the picking ray
-  //   var intersects = raycaster.intersectObjects( sceneRef.current.children, true );
+    // calculate objects intersecting the picking ray
+    var intersects = raycaster.intersectObjects( sceneRef.current.children, true );
     
-  //   if ( intersects.length > 0 ) {
+    if ( intersects.length > 0 ) {
       
-  //     // intersects[ 0 ].object.material.color.set( 0xff0000 );
-  //     intersects.forEach(isect => {
-  //       if ( isect.object.parent.name !== 'invisible' ) {
-  //         console.log( intersects.map( isect => {return isect.object} ));
-  //         isect.object.material.color.set( 0xff0000 );
-  //       }
-  //     });
+      // intersects[ 0 ].object.material.color.set( 0xff0000 );
+      // intersects.forEach(isect => {
+      //   if ( isect.object.parent.name !== 'invisible' ) {
+      //     console.log( intersects.map( isect => {return isect.object} ));
+      //     isect.object.material.color.set( 0xff0000 );
+      //   }
+      // });
+      if ( intersects[0].isScene || intersects[0].name === settings.invisname ) {
+        controlRef.current.visible = false
+      }
 
-  //   }
-  // }
+      // console.log(intersects);
+
+    }
+
+  }
 
 
   return (
     <>
       <ThreeJSContext.Provider value={ threeContext }>
         <Headers
-          ref={ headerRef }
           headerStyle={ headerStyle }
         />
         <MDBRow>
@@ -273,6 +308,7 @@ const ThreeWrapper = ({
             canvasStyle={ canvasStyle }
             containerStyle={ containerStyle }
             setContainerSize={ setContainerSize }
+            onKeyPress = { onKeyPress }
             />
           { threeIsReady ? children : undefined }
           <Panel

@@ -1,15 +1,21 @@
-import React, { forwardRef, useContext, useRef } from 'react';
+import React, { forwardRef, useContext, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBRow } from 'mdbreact';
+
+import ModalPage from './modal';
 
 import { ThreeJSContext } from './threeWarpper';
 import FilePicker from './filepicker';
 import Loader from './three/loader';
 
-const Header = ({ headerStyle }, ref) => {
+const Header = ({ headerStyle }) => {
 
   const context = useContext(ThreeJSContext)
   const { sendSignel, scene } = context;
+
+  const [ modalShow, setModalShow ] = useState(false);
+  const [ modalTitle, setModalTitle ] = useState("");
+  const [ modalChildren, setModalChildren ] = useState(null);
 
   // import
   const filePickerRef = useRef();
@@ -34,24 +40,44 @@ const Header = ({ headerStyle }, ref) => {
       "Delete"
     ],
     "Help" : [
-      "Source Code",
+      "Example",
       "About"
-    ]
+    ],
   }
 
   const onClickHandler = menuname => {
-    switch ( menuname ) {
-      case "New":
+    switch ( menuname.toLowerCase() ) {
+      case "new":
         sendSignel("menu_new");
         break;
-      case "Import":
+      case "import":
         filePickerRef.current.click();  
+        break;
+
+      case "example":
+        showModal( menuname );
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Modal manage
+
+  const showModal = ( name ) => {
+    setModalTitle( name );
+    setModalShow( true );
+    switch ( name.toLowerCase() ) {
+      case "example":
+        setModalChildren(<h2>Test :D</h2>)
         break;
     
       default:
         break;
     }
   }
+
+  // Loader
 
   const loader = new Loader( scene );
   const onImport = files => {
@@ -60,11 +86,15 @@ const Header = ({ headerStyle }, ref) => {
     })
   }
 
+  // Styled
+
   const StyledMDBRow = styled(MDBRow)`
     background: #77ecc6;
     box-shadow: rgba(0, 0, 0, 0.3) 0px -5px 30px -10px inset;
     font-size : 0.9rem;
   `
+
+  // Menu builder
   
   const dropdowns = [];
   for ( const key in menus ) {
@@ -73,7 +103,7 @@ const Header = ({ headerStyle }, ref) => {
       menus[key].forEach((submenu, index) => {
         if ( submenu !== "-" ) {
       items.push(<MDBDropdownItem key={index+key} onClick={e => onClickHandler( submenu )}>{submenu}</MDBDropdownItem>)
-        } else {
+        } else {  
           items.push(<MDBDropdownItem key={index+key} divider />)
         }
       });
@@ -91,12 +121,13 @@ const Header = ({ headerStyle }, ref) => {
   }
     
   return (
-    <StyledMDBRow ref={ref} style={ headerStyle }>
+    <StyledMDBRow style={ headerStyle }>
       <FilePicker ref={filePickerRef} onChange={onImport}/>
       {dropdowns}
       ⚡⚡⚡
+      <ModalPage isOpen={modalShow} title={ modalTitle } onHide={() => setModalShow(false)} >{ modalChildren }</ModalPage>
     </StyledMDBRow>
   )
 }
 
-export default forwardRef(Header);
+export default Header;

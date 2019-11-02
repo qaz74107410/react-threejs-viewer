@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import Tabs from './tabs';
 import SceneTree from './three/controller/scenetree';
 import ObjectInfo from './three/controller/objectinfo';
+import Settings from './three/controller/settings';
 
 const StyledPanel = styled(Scrollbar)`
   background: #a0f1d7;
@@ -34,14 +35,15 @@ const ObjDetailSection = styled(PanelSection)`
   padding: 0;
 `
 
-const Panel = ({ panelStyle }, panelRef) => {
+const SettingsSection = styled(PanelSection)``
 
+const Panel = ({ panelStyle }, panelRef) => {
   return (
     <StyledPanel ref={ panelRef } style={ panelStyle }>
-      <Tabs defalutname="scene" namearray={["scene","detail","setting"]}>
+      <Tabs defalutname="scene" namearray={["scene","detail","settings"]}>
         <MDBTabPane tabId="scene" role="tabpanel">
           <SceneSection>
-            <Scrollbar>
+            <Scrollbar >
               <SceneTree/>
             </Scrollbar>
           </SceneSection>
@@ -62,14 +64,10 @@ const Panel = ({ panelStyle }, panelRef) => {
             minima.
           </p>
         </MDBTabPane>
-        <MDBTabPane name="setting">
-          <p className="mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Nihil odit magnam minima, soluta doloribus reiciendis
-            molestiae placeat unde eos molestias. Quisquam aperiam,
-            pariatur. Tempora, placeat ratione porro voluptate odit
-            minima.
-          </p>
+        <MDBTabPane  tabId="settings" role="tabpanel">
+          <SettingsSection>
+            <Settings/>
+          </SettingsSection>
         </MDBTabPane>
       </Tabs>
     </StyledPanel>

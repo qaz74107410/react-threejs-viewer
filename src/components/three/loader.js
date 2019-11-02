@@ -1,34 +1,53 @@
 import * as THREEjs from 'three';
 
-// custom loader
-import AMFLoader from './loader/AMFLoader';
-import AWDLoader from './loader/AWDLoader';
-import BabylonLoader from './loader/BabylonLoader';
-import ColladaLoader from './loader/ColladaLoader';
-import FBXLoader from './loader/FBXLoader';
-import GLTFLoader from './loader/GLTFLoader';
-import KMZLoader from './loader/KMZLoader';
-import LegacyGLTFLoader from './loader/LegacyGLTFLoader';
-import MD2Loader from './loader/MD2Loader';
-import MMDLoader from './loader/MMDLoader';
-import OBJLoader from './loader/OBJLoader';
-import PLYLoader from './loader/PLYLoader';
-import STLLoader from './loader/STLLoader';
-import SVGLoader from './loader/SVGLoader';
-import TDSLoader from './loader/TDSLoader';
-import VRMLLoader from './loader/VRMLLoader';
-import VTKLoader from './loader/VTKLoader';
+// loader
+import { AMFLoader } from 'three/examples/jsm/loaders/AMFLoader';
+import { AWDLoader } from 'three/examples/jsm/loaders/AWDLoader';
+// import { BabylonLoader } from 'three/examples/jsm/loaders/BabylonLoader';
+import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { KMZLoader } from 'three/examples/jsm/loaders/KMZLoader';
+// import { LegacyGLTFLoader } from 'three/examples/jsm/loaders/LegacyGLTFLoader';
+import { MD2Loader } from 'three/examples/jsm/loaders/MD2Loader';
+import { MMDLoader } from 'three/examples/jsm/loaders/MMDLoader';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
+import { TDSLoader } from 'three/examples/jsm/loaders/TDSLoader';
+import { VRMLLoader } from 'three/examples/jsm/loaders/VRMLLoader';
+import { VTKLoader } from 'three/examples/jsm/loaders/VTKLoader';
+
+// // custom loader
+// import AMFLoader from './loader/AMFLoader';
+// import AWDLoader from './loader/AWDLoader';
+// import BabylonLoader from './loader/BabylonLoader';
+// import ColladaLoader from './loader/ColladaLoader';
+// import FBXLoader from './loader/FBXLoader';
+// import GLTFLoader from './loader/GLTFLoader';
+// import KMZLoader from './loader/KMZLoader';
+// import LegacyGLTFLoader from './loader/LegacyGLTFLoader';
+// import MD2Loader from './loader/MD2Loader';
+// import MMDLoader from './loader/MMDLoader';
+// import OBJLoader from './loader/OBJLoader';
+// import PLYLoader from './loader/PLYLoader';
+// import STLLoader from './loader/STLLoader';
+// import SVGLoader from './loader/SVGLoader';
+// import TDSLoader from './loader/TDSLoader';
+// import VRMLLoader from './loader/VRMLLoader';
+// import VTKLoader from './loader/VTKLoader';
 
 const THREE = (function (THREEjs) {
 	
 	THREEjs.AMFLoader = AMFLoader;
 	THREEjs.AWDLoader = AWDLoader;
-	THREEjs.BabylonLoader = BabylonLoader;
+	// THREEjs.BabylonLoader = BabylonLoader;
 	THREEjs.ColladaLoader = ColladaLoader;
 	THREEjs.FBXLoader = FBXLoader;
 	THREEjs.GLTFLoader = GLTFLoader;
 	THREEjs.KMZLoader = KMZLoader;
-	THREEjs.LegacyGLTFLoader = LegacyGLTFLoader;
+	// THREEjs.LegacyGLTFLoader = LegacyGLTFLoader;
 	THREEjs.MD2Loader = MD2Loader;
 	THREEjs.MMDLoader = MMDLoader;
 	THREEjs.OBJLoader = OBJLoader;
@@ -150,26 +169,26 @@ function Loader( scene ) {
 
 				break;
 
-			case 'babylon':
+			// case 'babylon':
 
-				reader.addEventListener( 'load', function ( event ) {
+			// 	reader.addEventListener( 'load', function ( event ) {
 
-					var contents = event.target.result;
-					var json = JSON.parse( contents );
+			// 		var contents = event.target.result;
+			// 		var json = JSON.parse( contents );
 
-					var loader = new THREE.BabylonLoader();
-					var loadedscene = loader.parse( json );
+			// 		var loader = new THREE.BabylonLoader();
+			// 		var loadedscene = loader.parse( json );
 
-					// editor.execute( new SetSceneCommand( scene ) );
-					loadedscene.children.forEach(obj => {
-						scene.add(obj);
-					});
+			// 		// editor.execute( new SetSceneCommand( scene ) );
+			// 		loadedscene.children.forEach(obj => {
+			// 			scene.add(obj);
+			// 		});
 
-					callback && callback();
-				}, false );
-				reader.readAsText( file );
+			// 		callback && callback();
+			// 	}, false );
+			// 	reader.readAsText( file );
 
-				break;
+			// 	break;
 
 			case 'babylonmeshdata':
 
@@ -270,15 +289,7 @@ function Loader( scene ) {
 
 					var loader;
 
-					if ( isGLTF1( contents ) ) {
-
-						loader = new THREE.LegacyGLTFLoader( manager );
-
-					} else {
-
-						loader = new THREE.GLTFLoader( manager );
-
-					}
+					loader = new THREE.GLTFLoader( manager );
 
 					loader.parse( contents, '', function ( result ) {
 

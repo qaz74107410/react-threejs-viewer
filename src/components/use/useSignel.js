@@ -1,42 +1,57 @@
 
 import { useState, useEffect } from "react";
 
-const DEBUG = true;
-
 function Signel( names ) {
 
-  const [signel, setSignel] = useState("");
+  const signelList = names.reduce((obj, name) => {
+    obj[name] = false;
+    return obj;
+  }, {})
+
+  const objnames = names.reduce((obj, name) => {
+    obj[name] = name;
+    return obj;
+  }, {});
   
   const useSignel = ( handler, signelsname ) => {
+
+    const deps = signelsname.reduce((arr, name) => { 
+      arr.push(signelList[name]) 
+      return arr
+    }, []);
+
     return (
       useEffect(() => {
-        if ( signelsname.indexOf(signel) !== -1 ) {
-        console.log("[📶 signel recived] : ", signel);
-          handler();
-        }
-      }, [signel])
+        console.log("[📶 signel recived] : ", signelsname , deps);
+        handler();
+      }, deps)
     )
 
   }
   
   const sendSignel = ( signelname ) => {
-    DEBUG && console.log("[📶 signel sended] : ", signelname);
-    setSignel(signelname);
-    setTimeout(() => { setSignel("") }, 100);
+    console.log("[📶 signel sended] : ", signelname);
+    // debugger;
+    // let newsignellist = Object.assign({}, signelList)
+    // newsignellist[signelname] = !signelList[signelname]
+    // // signelList[signelname] = !signelList[signelname]
+    // setSignelList(signelList);
+    signelList[signelname] = !signelList[signelname]
+    console.log(signelList);
+    console.log(signelList[signelname]);
+    console.log(!signelList[signelname]);
   }
+
   return {
-    names,
+    names : objnames,
     useSignel,
     sendSignel
   }
+  
 }
 
 const createSignel = names => {
-  const objnames = names.reduce((obj, name) => {
-    obj[name] = name;
-    return obj;
-  }, {});
-  const signel = new Signel(objnames);
+  const signel = new Signel( names );
   return signel
 }
 

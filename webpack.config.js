@@ -8,11 +8,15 @@ const {GenerateSW} = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const HappyPack = require('happypack');
+
+const webpack = require("webpack");
 
 module.exports = (env, argv) => {
 	const {mode} = argv;
 
-	return {
+	const webpackconfig = {
 		entry: './src/index.js',
 		output: {
 			filename: '[name].[hash].js',
@@ -22,7 +26,7 @@ module.exports = (env, argv) => {
 		resolve: {
 			alias: {
 				'react-dom': '@hot-loader/react-dom'
-			}
+			},
 		},
 		optimization: {
 			minimize: mode !== 'development',
@@ -86,7 +90,9 @@ module.exports = (env, argv) => {
 				{
 					test: /\.js$/,
 					exclude: /node_modules/,
-					use: ['react-hot-loader/webpack', 'babel-loader?cacheDirectory=true']
+					// 1) replace your original list of loaders with "happypack/loader":
+					use: 'happypack/loader',
+					// use: ['react-hot-loader/webpack', 'babel-loader?cacheDirectory=true']
 				},
 				{
 					test: /\.css$/,
@@ -173,6 +179,13 @@ module.exports = (env, argv) => {
 					minifyURLs: true
 				}
 			}),
+			// 2) create the plugin:
+			new HappyPack(
+				{
+					// 3) re-add the loaders you replaced above in #1:
+					loaders: ['react-hot-loader/webpack', 'babel-loader?cacheDirectory=true']
+				}
+			),
 			new ExtractCssChunks(
 				{
 					filename: '[name].css',
@@ -205,14 +218,24 @@ module.exports = (env, argv) => {
 				]
 			}),
 			/* eslint-enable camelcase */
-			new GenerateSW({
-				swDest: 'sw.js',
-				importWorkboxFrom: 'local',
-				clientsClaim: true,
-				skipWaiting: true
-			}),
+			// new GenerateSW({
+			// 	swDest: 'sw.js',
+			// 	importWorkboxFrom: 'local',
+			// 	clientsClaim: true,
+			// 	skipWaiting: true
+			// }),
+			new webpack.optimize.OccurrenceOrderPlugin(),
 			new HardSourceWebpackPlugin(),
 			new FriendlyErrorsWebpackPlugin()
 		]
 	};
+
+	if ( env ) {
+		if ( env.test === 'webpack' ) {
+			const smp = new SpeedMeasurePlugin();
+			return smp.wrap(webpackconfig);
+		} 
+	} else {
+		return webpackconfig
+	}
 };

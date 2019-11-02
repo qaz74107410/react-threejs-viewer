@@ -238,7 +238,7 @@ const ObjectInfo = () => {
 
     });
 
-    rows.length > 0 && setRowsInfo( rows );
+    rows.length > 0 ? setRowsInfo( rows ) : setRowsInfo( [<span key='annount'>Please select object at selector panel.</span>] );
   } 
 
   // Build

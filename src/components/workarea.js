@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 import { ThreeJSContext } from './threeWarpper';
 
-const Workarea = ({ canvasStyle, containerStyle, setContainerSize }, canvasRef) => {
+const Workarea = ({ canvasStyle, containerStyle, setContainerSize, onKeyPress }, canvasRef) => {
 
   const containerRef = useRef();
 
@@ -35,7 +35,7 @@ const Workarea = ({ canvasStyle, containerStyle, setContainerSize }, canvasRef) 
   return (
     <div className="render-container" ref={containerRef} style={ containerStyle }>
       {/* render me :D */}
-      <canvas ref={canvasRef}/>
+      <canvas ref={canvasRef} tabIndex={0} onKeyPress={ onKeyPress }/>
     </div>
   )
 

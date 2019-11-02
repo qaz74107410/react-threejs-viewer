@@ -19,17 +19,20 @@ const StyledMDBRow = styled(MDBRow)`
 const SceneTree = () => {
 
   const context = useContext(ThreeJSContext)
-  const { scene, selectObj } = context;
+  const { scene, selectObj, settings } = context;
   
-  const [objlist, setObjlist] = useState();
   const [treeData, setTreeData] = useState([]);
   
+  const sortableTreeRef = useRef();
+  const wrapperRef = useRef();
   const prevRowRef = useRef();
 
   const mapTreeData = (realobjs, treeobjs = [], option = {}) => {
-    return realobjs.map( (robj, index) => {
+    return realobjs.filter( (robj) => {
+      // 
+      return robj.name !== settings.invisname
+    }).map( (robj, index) => {
       if ( treeobjs.length > index ) {
-        // debugger;
         // object aleardy exist
         const tobj = treeobjs[index];
 
@@ -44,7 +47,6 @@ const SceneTree = () => {
         node.title = robj.name ? robj.type + ' : ' + robj.name : robj.type;
         node.children = robj.children.length >= 0 ? mapTreeData( robj.children ) : undefined;
         node.expanded = option.expanded || false;
-        node.ishide = robj.name === 'invisible';
         return node;
       }
     });
@@ -79,7 +81,7 @@ const SceneTree = () => {
 
           break;
 
-        }
+        } 
 
         rowelem = rowelem.parentNode;
      
@@ -88,23 +90,36 @@ const SceneTree = () => {
     }
   }
 
+  const onDeselectNode = e => {
+    if ( e.target !== wrapperRef.current ) return
+    prevRowRef.current && toggleSelectClass(prevRowRef.current)
+    prevRowRef.current = null;
+    selectObj(undefined);
+  }
+
   const toggleSelectClass = (node, bool) => {
     ! node.className.includes('rowSelected') || bool ? node.className = node.className + " rowSelected" : node.classList.remove("rowSelected");
   }
 
   return (
-    <>
+    <div
+      style={{minHeight : 400}}
+      onClick={e => onDeselectNode(e)}
+      ref={wrapperRef}
+    >
       <SortableTree
         treeData={treeData}
-        onChange={treeData => setTreeData( treeData )}
+        canDrag={false}
+        onChange={treeData => setTreeData( treeData )}  
         getNodeKey={({ node }) => node.id}
         theme={FileExplorerTheme}
         isVirtualized={false}
         generateNodeProps={rowInfo => ({
           onClick: e => onSelectNode(e, rowInfo),
         })}
+        ref={sortableTreeRef}
       />
-    </>
+    </div>
   )
 }
 

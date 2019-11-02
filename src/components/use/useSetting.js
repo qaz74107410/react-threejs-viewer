@@ -1,44 +1,42 @@
 import { useState } from 'react';
 
-function useSetting( initialValue, key = 'setting' ) {
-
-  const setting = localStorage.getItem( key );
-  initialValue = setting ? JSON.parse( setting ) : initialValue;
+const initialValue = {
   
-  const [ settingStore, setSettingStore ] = useState( initialValue );
+  invisname : 'invisible',
 
-  const setSetting = ( property, value ) => {
-    let newsetting;
-    newsetting = Object.assign({}, settingStore );
-    newsetting[property] = value;
-    setSettingStore( {} );
-    localStorage.setItem( key, JSON.stringify( newsetting ) );
-  };
+  key_translate : 'w',
+  key_rotate : 'e',
+  key_scale : 'r',
 
-  return [ settingStore, setSetting ];
-
+  key_deselect : 'Escape'
+  
 }
 
-// function useSetting( property, initialValue, key = 'setting' ) {
+function useSetting( key = 'setting' ) {
 
-//   const [ settingStore, setSettingStore ] = useState(() => {
-//     const setting = window.localStorage.getItem( key );
-//     return setting ? JSON.parse( setting ) : {};
-//   });
+  const storageSetting = localStorage.getItem( key );
 
-//   const [ propertyValue, setPropertyValue ] = useState(() => {
-//     return settingStore[property] ? settingStore[property] : initialValue
-//   })
+  let setting;
 
-//   const setValueProperty = value => {
-//     setPropertyValue(value);
-//     const newsetting = settingStore;
-//     newsetting[property] = value;
-//     setSettingStore(newsetting)
-//     window.localStorage.setItem( key, JSON.stringify( newsetting ) );
-//   };
+  if ( storageSetting === undefined || storageSetting === null ) {
+    setting = initialValue
+  } else {
+    setting = JSON.parse(storageSetting);
+    if ( typeof(setting) !== "object" || Object.keys(setting).length === 0 ) {
+      setting = initialValue
+      localStorage.removeItem( key )
+    }
+  }
+  
+  const [ settingStore, setSettingStore ] = useState( setting );
 
-//   return [ propertyValue, setValueProperty ];
-// }
+  const setSettings = ( newsettings ) => {
+    setSettingStore( newsettings );
+    // localStorage.setItem( key, JSON.stringify( newsettings ) );
+  };
+
+  return [ settingStore, setSettings ];
+
+}
 
 export { useSetting };
